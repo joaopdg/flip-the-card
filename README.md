@@ -1,1 +1,5 @@
-# flip-the-card
+# Random Card Flip App
+
+Select your name (so you don't pick your own name) click on the card that you want and there you go, your pair as been assigned!
+
+[Deployed at Cyclic](https://cardflip.cyclic.app/)
