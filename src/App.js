@@ -57,8 +57,8 @@ function App() {
     let randomStudent;
     if (
       !e.target.classList.contains("flippedCard") &&
-      selectTarget.value !== "default" &&
-      selectTarget.value !== pickedStudents[1]
+      selectTarget !== "default" &&
+      selectTarget !== pickedStudents[1]
     ) {
       do {
         randomStudent = queue[Math.floor(Math.random() * queue.length)];
@@ -78,7 +78,7 @@ function App() {
       setQueue(remaining);
 
       // Reset select dropdown to default after pair is assigned
-      selectTarget.value = "default";
+      setSelectTarget("default")
     }
   };
 
@@ -121,9 +121,9 @@ function App() {
           <select
             id="selectStudents"
             className="classic"
-            onClick={(e) => {
+            onChange={(e) => {
               selectStudent(e);
-              setSelectTarget(e.target);
+              setSelectTarget(e.target.value);
             }}
           >
             <option key="default" value="default">
@@ -131,7 +131,7 @@ function App() {
             </option>
             {queue.map((student, index) => {
               return (
-                <option key={index} value={student}>
+                <option key={Math.floor(Math.random() * 123132312)} value={student}>
                   {student}
                 </option>
               );
