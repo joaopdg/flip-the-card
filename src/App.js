@@ -78,7 +78,7 @@ function App() {
       setQueue(remaining);
 
       // Reset select dropdown to default after pair is assigned
-      setSelectTarget("default")
+      setSelectTarget("default");
     }
   };
 
@@ -131,7 +131,10 @@ function App() {
             </option>
             {queue.map((student, index) => {
               return (
-                <option key={Math.floor(Math.random() * 123132312)} value={student}>
+                <option
+                  key={Math.floor(Math.random() * 123132312)}
+                  value={student}
+                >
                   {student}
                 </option>
               );
@@ -185,7 +188,6 @@ function App() {
             console.log(`Students in queue ${queue.length}  >>>  ${queue}`);
           }}
         >
-          console
         </button> */}
       </div>
     </>
