@@ -34,67 +34,54 @@ function App() {
 
   // Array of already picked students
   const [pickedStudents, setPickedStudents] = useState([]);
-  // Array of students waiting to be pick (select dropdown)
-  const [queue, setQueue] = useState([...studentsList]);
   // Array of pairs already assigned (results box)
   const [studentPairs, setStudentPairs] = useState([]);
-  // Will be used later to save the select dropdown e.target
-  const [selectTarget, setSelectTarget] = useState(null);
+  // Student that is picking a card
+  const [selectTarget, setSelectTarget] = useState("default");
 
   // Get half of the cards
   const numOfCards = studentsList.length / 2;
 
-  // Add picking student to the pickedStudents array
-  const selectStudent = (e) => {
-    if (e.target.value !== "default") {
-      let picking = e.target.value;
-      setPickedStudents([picking, ...pickedStudents]);
-    }
-  };
-
   // Assign a random person to the picking student
   const pickFunction = (e) => {
-    let randomStudent;
     if (
       !e.target.classList.contains("flippedCard") &&
       selectTarget !== "default" &&
-      selectTarget !== pickedStudents[1]
+      !pickedStudents.includes(selectTarget)
     ) {
-      do {
-        randomStudent = queue[Math.floor(Math.random() * queue.length)];
-      } while (pickedStudents.includes(randomStudent));
+      let randomStudent;
+      /*       do {
+        randomStudent =
+          studentsList[Math.floor(Math.random() * studentsList.length)];
+      } while (
+        pickedStudents.includes(randomStudent) &&
+        randomStudent === selectTarget
+      ); */
+      for (let i = 0; i < 50; i++) {
+        randomStudent =
+          studentsList[Math.floor(Math.random() * studentsList.length)];
+        if (
+          randomStudent !== selectTarget &&
+          !pickedStudents.includes(randomStudent)
+        ) {
+          break;
+        }
+      }
 
       // Update the array of already picked students
-      setPickedStudents([randomStudent, ...pickedStudents]);
+      setPickedStudents([randomStudent, selectTarget, ...pickedStudents]);
 
       // Flip the card
       e.target.classList.add("flippedCard");
       e.target.textContent = randomStudent;
 
-      // Remove already assigned students from the select dropdown
-      let remaining = studentsList.filter(
-        (student) => !pickedStudents.includes(student)
-      );
-      setQueue(remaining);
+      // Keep track of pairs already assigned
+      setStudentPairs([...studentPairs, `${selectTarget} 🤝 ${randomStudent}`]);
 
       // Reset select dropdown to default after pair is assigned
       setSelectTarget("default");
     }
   };
-
-  // Keep track of pairs already assigned
-  useEffect(() => {
-    if (
-      pickedStudents.length > 1 &&
-      pickedStudents.length % 2 === 0 &&
-      pickedStudents[0] !== pickedStudents[1]
-    ) {
-      setStudentPairs([
-        ...studentPairs,
-        `${pickedStudents[1]} 🤝 ${pickedStudents[0]}`,
-      ]);
-    }
-  }, [pickedStudents]);
 
   return (
     <>
@@ -122,28 +109,26 @@ function App() {
             id="selectStudents"
             className="classic"
             onChange={(e) => {
-              selectStudent(e);
               setSelectTarget(e.target.value);
             }}
+            value={selectTarget}
           >
             <option key="default" value="default">
               Select your name
             </option>
-            {queue.map((student, index) => {
-              return (
-                <option
-                  key={Math.floor(Math.random() * 123132312)}
-                  value={student}
-                >
-                  {student}
-                </option>
-              );
+            {studentsList.map((student, index) => {
+              if (!pickedStudents.includes(student))
+                return (
+                  <option key={index} value={student}>
+                    {student}
+                  </option>
+                );
             })}
           </select>
 
           {/* ALERT MESSAGE IF STUDENT ALREADY HAS A PAIR */}
           {pickedStudents.length > 1 &&
-          pickedStudents[0] === pickedStudents[1] ? (
+          pickedStudents.includes(selectTarget) ? (
             <p id="selectAlert">Student already picked!</p>
           ) : (
             <p></p>
@@ -178,16 +163,15 @@ function App() {
         {/* CONSOLE LOGS FOR TESTING - COMMENT BEFORE DEPLOY */}
         {/* <button
           onClick={() => {
-            console.log(`-----------------------`);
+            console.log(`-------------------------------------`);
+            console.log(`ALL STUDENTS  >>>  ${studentsList.length}`);
+            console.log(`SELECTED STUDENT  >>>  ${selectTarget}`);
             console.log(
-              `Picked Students ${pickedStudents.length}  >>>  ${pickedStudents}`
+              `PICKED STUDENTS ${pickedStudents.length}  >>>  ${pickedStudents}`
             );
-            console.log(
-              `Remaining Students ${studentsList.length}  >>>  ${studentsList}`
-            );
-            console.log(`Students in queue ${queue.length}  >>>  ${queue}`);
           }}
         >
+          console.log
         </button> */}
       </div>
     </>
